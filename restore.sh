@@ -11,7 +11,15 @@ mongorestore --version
 echo ""
 
 cd backups
-ls
+BACKUP_LIST="$(ls -r)"
+BACKUP_DIR=""
+select dir in $BACKUP_LIST;
+do
+	BACKUP_DIR="$dir"
+	echo $BACKUP_DIR
+	break
+done
+
 
 # mongodump --uri="$DATABASE_URI" --db="$DB" 
 
