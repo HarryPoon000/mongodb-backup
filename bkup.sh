@@ -1,14 +1,24 @@
 #!/bin/bash
 
+## DATABASE BACKUP
+
 set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+cd "$SCRIPT_DIR"
 
-source "$SCRIPT_DIR/.env"
-CURTIME="$(date +%Y-%m-%-d_%H:%M:%S)"
-echo "$CURTIME $(mongodump --version)"
+source .env
+mongodump --version
 echo ""
 
+set +e
 mkdir backups 2> /dev/null # make directory, ignore if exists
-cd backups && mkdir "$CURTIME"
+set -e
 
-ls
+CURTIME="$(date +%Y-%m-%-d_%H:%M:%S)"
+cd backups && mkdir "$CURTIME"
+cd "$CURTIME"
+
+
+echo "Starting backup. Dir: $(pwd)"
+mongodump --uri="$DATABASE_URI" --db="$DB" 
+
