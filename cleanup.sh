@@ -18,12 +18,17 @@ POSITIONAL_ARGS=()
 
 TAG=""
 DIR="$SCRIPT_DIR"
+WETRUN=""
 while [[ $# -gt 0 ]]; do
 	case $1 in
 		-t|--tag)
 			TAG="$2"
 			shift # past argument
 			shift # past value
+			;;
+		--wetRun) ## dry run by default to prevent accidental triggers
+			WETRUN=1
+			shift # past argument
 			;;
 		-d|--directory)
 			DIR="$2"
@@ -58,6 +63,9 @@ if [[ $TAG == "" ]]; then
 	done
 fi
 
+if [[ $WETRUN != 1 ]] ; then
+	echo "\`--wetRun\` not set. Dry running..."
+fi
 cd $TAG
 
 CURTIME="$(date +%s)"
@@ -70,6 +78,9 @@ echo "Folders to delete:"
 for _BACKUPTIME in $(ls); do 
 	DELETE_FILE=$(( $(time_between $_BACKUPTIME $CURTIME) / 3600 / 24 >= 90 ))
 	if [[ $DELETE_FILE == 1 ]] ;then
-		echo $_BACKUPTIME
+		echo "Deleting: $_BACKUPTIME"
+		if [[ $WETRUN == 1 ]] ; then
+			rm -rf $_BACKUPTIME
+		fi
 	fi
 done
