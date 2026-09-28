@@ -4,11 +4,31 @@
 
 set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cd "$SCRIPT_DIR"
 
-source .env
+DIR="$SCRIPT_DIR"
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -d|--directory)
+      DIR="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+source "$SCRIPT_DIR/.env"
 mongorestore --version
 echo ""
+
+cd $DIR # Relative to where this is executed from
 
 cd backups
 BACKUP_TAG=""
@@ -29,5 +49,7 @@ do
 	break
 done
 
-# mongodump --uri="$DATABASE_URI" --db="$DB" 
+cd $BACKUP_DIR
+
+mongorestore --uri="$DATABASE_URI" --nsInclude="$DB.*" --dryRun --verbose --bypassDocumentValidation 
 

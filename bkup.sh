@@ -3,17 +3,23 @@
 ## DATABASE BACKUP
 
 set -e
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 ## Read args
 
 POSITIONAL_ARGS=()
 
 TAG="manual"
-
+DIR="$SCRIPT_DIR"
 while [[ $# -gt 0 ]]; do
   case $1 in
     -t|--tag)
       TAG="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -d|--directory)
+      DIR="$2"
       shift # past argument
       shift # past value
       ;;
@@ -28,12 +34,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-cd "$SCRIPT_DIR"
-
-source .env
+source "$SCRIPT_DIR/.env"
 mongodump --version
 echo ""
+
+cd $DIR # Relative to where this is executed from
 
 set +e
 mkdir backups 2> /dev/null # make directory, ignore if exists
