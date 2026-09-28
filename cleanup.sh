@@ -3,8 +3,8 @@
 ## CLEAN BACKUPS
 
 time_between() {
-	START_SECS="$([ "$(uname)" = Linux ] && date -d $1 +%s || date -ju -f '%Y-%m-%d_%H:%M:%S' $1 +%s )"
-	END_SECS="$([ "$(uname)" = Linux ] && date -d $2 +%s || date -ju -f '%Y-%m-%d_%H:%M:%S' $2 +%s )"
+	START_SECS=$(($1))
+	END_SECS=$(($2))
 	DIFF_SECS=$(($END_SECS - $START_SECS))
 	echo $DIFF_SECS
 }
@@ -60,7 +60,7 @@ fi
 
 cd $TAG
 
-CURTIME="$(date +%Y-%m-%-d_%H:%M:%S)"
+CURTIME="$(date +%s)"
 
 echo "Current time: $CURTIME"
 pwd

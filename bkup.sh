@@ -46,7 +46,7 @@ cd backups && mkdir "$TAG" 2> /dev/null # make directory, ignore if exists
 cd "$TAG"
 set -e
 
-CURTIME="$(date +%Y-%m-%-d_%H:%M:%S)"
+CURTIME="$(date +%s)"
 mkdir "$CURTIME"
 cd "$CURTIME"
 
