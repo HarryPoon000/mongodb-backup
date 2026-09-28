@@ -5,8 +5,6 @@
 time_between() {
 	START_SECS="$([ "$(uname)" = Linux ] && date -d $1 +%s || date -ju -f '%Y-%m-%d_%H:%M:%S' $1 +%s )"
 	END_SECS="$([ "$(uname)" = Linux ] && date -d $2 +%s || date -ju -f '%Y-%m-%d_%H:%M:%S' $2 +%s )"
-	# START_SECS=$(date -r $1 +%s)
-	# END_SECS=$(date -r $2 +%s)
 	DIFF_SECS=$(($END_SECS - $START_SECS))
 	echo $DIFF_SECS
 }
