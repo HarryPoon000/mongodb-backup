@@ -6,7 +6,7 @@ set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 DIR="$SCRIPT_DIR"
-DRYRUN_ARG="--dryRun"
+RUN_ARG="--dryRun"
 while [[ $# -gt 0 ]]; do
   case $1 in
     -d|--directory)
@@ -15,7 +15,7 @@ while [[ $# -gt 0 ]]; do
       shift # past value
       ;;
     --wetRun) ## dry run by default to prevent accidental triggers
-      DRYRUN_ARG=""
+      RUN_ARG=""
       shift # past argument
       ;;
     -*|--*)
@@ -29,7 +29,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ $DRYRUN_ARG == "--dryRun" ]]; then
+if [[ $RUN_ARG == "--dryRun" ]]; then
 	echo "\`--wetRun\` not set. Dry running the restoration"
 fi
 
@@ -60,5 +60,5 @@ done
 
 cd $BACKUP_DIR
 
-mongorestore --uri="$DATABASE_URI" --nsInclude="$DB.*" "$DRYRUN_ARG" --verbose --bypassDocumentValidation 
+mongorestore --uri="$DATABASE_URI" --nsInclude="$DB.*" "$RUN_ARG" --verbose --bypassDocumentValidation --drop
 
