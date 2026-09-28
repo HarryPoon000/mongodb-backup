@@ -46,7 +46,7 @@ cd backups && mkdir "$TAG" 2> /dev/null # make directory, ignore if exists
 cd "$TAG"
 set -e
 
-CURTIME="$(date +%Y-%m-%-dT%H:%M:%S+08:00)" # UTC+8 (HKT) since we are running in Hong Kong
+CURTIME="$(date +%Y-%m-%-d_%H:%M:%S)"
 mkdir "$CURTIME"
 cd "$CURTIME"
 
