@@ -6,12 +6,17 @@ set -e
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 DIR="$SCRIPT_DIR"
+DRYRUN_ARG="--dryRun"
 while [[ $# -gt 0 ]]; do
   case $1 in
     -d|--directory)
       DIR="$2"
       shift # past argument
       shift # past value
+      ;;
+    --wetRun) ## dry run by default to prevent accidental triggers
+      DRYRUN_ARG=""
+      shift # past argument
       ;;
     -*|--*)
       echo "Unknown option $1"
@@ -23,6 +28,10 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if [[ $DRYRUN_ARG == "--dryRun" ]]; then
+	echo "\`--wetRun\` not set. Dry running the restoration"
+fi
 
 source "$SCRIPT_DIR/.env"
 mongorestore --version
@@ -51,5 +60,5 @@ done
 
 cd $BACKUP_DIR
 
-mongorestore --uri="$DATABASE_URI" --nsInclude="$DB.*" --dryRun --verbose --bypassDocumentValidation 
+mongorestore --uri="$DATABASE_URI" --nsInclude="$DB.*" "$DRYRUN_ARG" --verbose --bypassDocumentValidation 
 
